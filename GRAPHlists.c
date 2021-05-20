@@ -43,8 +43,7 @@ void GRAPHinsertArc( Graph G, vertex v, vertex w ) {
     
     G->adj[v] = NEWnode( w, G->adj[v]);
     G->A++;
-
-    printf("%d-%d ", v, w);
+    
 }
 
 void GRAPHremoveArc( Graph G, vertex v, vertex w) {
@@ -258,7 +257,36 @@ int *UGRAPHdegrees( Graph G ) {
     return degrees;
 }
 
-int isRootedForest(Graph G) {
+int isRootedForest(Graph G, int top[]) {
+    int sources = 0, inQtt;
+
+    for(vertex v = 0; v < G->V; v++)
+        if(top[v] == 0) sources++;
+
+    if(sources <= 1)
+        return 0;
+
+    for(int vActu = 0; vActu < G->V; vActu++) {
+        inQtt = 0;
+
+        for(vertex v = 0; v < G->V; v++) {
+            link aux = G->adj[v];
+
+            while(aux) {
+                if(aux->w == vActu) {
+                    if(inQtt)
+                        return 0;
+                    else
+                        inQtt++;
+                }
+
+                aux = aux->next;
+            }   
+        }
+    }
+
+
+    return 1;
 
 }
 

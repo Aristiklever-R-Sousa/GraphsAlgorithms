@@ -197,8 +197,34 @@ int *UGRAPHdegrees( Graph G ) {
     return degrees;
 }
 
-int isRootedForest(Graph G) {
+/*
+    * Vai visitar todas as linhas de uma determinada coluna para achar os graus de entrada.
+    * Se houver algum maior que 1, retornará 0 (false)
+    * Senão, retorna 1 (true)
+*/
+int isRootedForest(Graph G, int top[]) {
+    int sources = 0, inQtt;
 
+    for(vertex v = 0; v < G->V; v++)
+        if(top[v] == 0) sources++;
+
+    if(sources <= 1)
+        return 0;
+
+    for(vertex w = 0; w < G->V; w++) {
+        inQtt = 0;
+
+        for(vertex v = 0; v < G->V; w++)
+            if(G->adj[v][w]) {
+                if(inQtt)
+                    return 0;
+                else
+                    inQtt++;
+            }
+        
+    }
+
+    return 1;
 }
 
 static int path[4], step, visited[1000], archVisited[1000][1000];

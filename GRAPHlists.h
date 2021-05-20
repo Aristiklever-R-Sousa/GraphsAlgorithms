@@ -23,6 +23,6 @@ int GRAPHIsUndirected( Graph G );
 
 int *UGRAPHdegrees( Graph G );
 
-int isRootedForest( Graph G );
+int isRootedForest( Graph G, int top[] );
 
 void GRAPHsimplePaths( Graph G, int lenghtPath );

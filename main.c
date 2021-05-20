@@ -1,8 +1,8 @@
 #include <stdio.h>
 // #include <stdlib.h>
 // #include <time.h>
-#include "GRAPHmatrix.h"
-// #include "GRAPHlists.h"
+// #include "GRAPHmatrix.h"
+#include "GRAPHlists.h"
 
 int main() {
     int V, v = 1, w = 1;
@@ -16,10 +16,8 @@ int main() {
             GRAPHinsertArc(g, v, w);
     }
 
-    // printf("\n");
-    // GRAPHshow(g);
-    printf("\n");
-    GRAPHsimplePaths(g, 4);
+    GRAPHshow(g);
+    // GRAPHsimplePaths(g, 4);
 
     // printf("%ld\n", RAND_MAX+1);
 }
