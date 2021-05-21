@@ -59,6 +59,8 @@ void GRAPHshow( Graph G ) {
       
         printf( "\n");
    }
+
+   printf( "\n");
 }
 
 /*
@@ -229,9 +231,22 @@ int isRootedForest(Graph G, int top[]) {
 
 static int path[4], step, visited[1000], archVisited[1000][1000];
 
-static void emptyVisited(int V) {
+static void emptyVertVisited(int V) {
     for(int i = 0; i < V; i++)
         visited[i] = 0;
+}
+
+static void emptyArcVisited(int V, int vEspec) {
+    if(vEspec == -1)
+        for(vertex v = 0; v < V; v++)
+            for(vertex w = 0; w < V; w++)
+                archVisited[v][w] = 0;
+    else {
+        for(vertex v = 0; v < V; v++)
+            for(vertex w = 0; w < V; w++)
+                if(v != vEspec)
+                    archVisited[v][w] = 0;
+    }
 }
 
 static void pathConstruct( Graph G, vertex v ) {
@@ -253,6 +268,9 @@ static void pathConstruct( Graph G, vertex v ) {
         if (G->adj[v][w] && (visited[w] == 0 || archVisited[v][w] == 0)) {
             archVisited[v][w] = 1;
             pathConstruct( G, w );
+
+            if(step == 0)
+                
         }
     }
 
@@ -264,10 +282,14 @@ void GRAPHsimplePaths(Graph G, int lenghtPath) {
     for(int i = 0; i < lenghtPath - 1; i++)
         path[i] = -1;
     
+    emptyVertVisited(G->V);
+    emptyArcVisited(G->V, -1);
+
     printf("Caminhos simples: \n");
     for(vertex v = 0; v < G->V; v++) {
         step = -1;
         pathConstruct(G, v);
-        emptyVisited(G->V);
+        emptyVertVisited(G->V);
+        emptyArcVisited(G->V);
     }
 }

@@ -1,8 +1,8 @@
 #include <stdio.h>
 // #include <stdlib.h>
 // #include <time.h>
-// #include "GRAPHmatrix.h"
-#include "GRAPHlists.h"
+#include "GRAPHmatrix.h"
+// #include "GRAPHlists.h"
 
 int main() {
     int V, v = 1, w = 1;
@@ -17,7 +17,7 @@ int main() {
     }
 
     GRAPHshow(g);
-    // GRAPHsimplePaths(g, 4);
+    GRAPHsimplePaths(g, 4);
 
     // printf("%ld\n", RAND_MAX+1);
 }
