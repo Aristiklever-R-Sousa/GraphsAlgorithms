@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <time.h>
 #include "GRAPHmatrix.h"
 
@@ -67,8 +68,8 @@ void GRAPHshow( Graph G ) {
     * Essa função inicializa um grafo aleatório;
     * Ela leva em consideração que o valor informado a A sempre será A <= V*(V-1)
 */
-
-Graph GRAPHrand( int V, int A ) { 
+Graph GRAPHrand( int V, int A )
+{ 
     Graph G = GRAPHinit( V );
     
     srand(time( NULL ));
@@ -81,6 +82,64 @@ Graph GRAPHrand( int V, int A ) {
     }
     
     return G;
+}
+
+bool isTopoNumbering( Graph G, int topo[])
+{
+    for (vertex v = 0; v < G->V; ++v)
+        for (vertex w = 0; w < G->V; w++)
+            if (adj[v][w] && topo[v] >= topo[w])
+                return false;
+
+   return true;
+}
+
+static int visited[1000];
+
+static void reachR( Graph G, vertex v)
+{ 
+   visited[v] = 1;
+
+    for (vertex w = 0; w < G->V; ++w)
+        if (G->adj[v][w] && visited[w] == 0)
+            reachR(G, w);
+}
+
+bool GRAPHreach( Graph G, vertex s, vertex t)
+{ 
+    for (vertex v = 0; v < G->V; ++v)
+        visited[v] = 0;
+
+    reachR(G, s);
+
+    if (visited[t] == 0)
+        return false;
+    else
+        return true;
+}
+
+static int cnt, pre[1000];
+
+static void dfsR(Graph)
+{
+    pre[v] = cnt++; 
+    
+    for (vertex w = 0; w < G->V; w++) {
+        if (pre[w] == -1)
+            dfsR(G, w);
+    }
+}
+
+void GRAPHdfs(Graph)
+{
+    cnt = 0;
+
+    for (vertex v = 0; v < G->V; ++v) 
+        pre[v] = -1;
+
+    for (vertex v = 0; v < G->V; ++v)
+        if (pre[v] == -1) 
+            dfsR( G, v);
 }
 
 static int isSink(int V, vertex **m, vertex v) {
@@ -158,7 +217,7 @@ int GRAPHoutdeg( Graph G, vertex v ) {
     return out;
 }
 
-int isIsolated(Graph G, vertex v) {
+int GRAPHisIsolated(Graph G, vertex v) {
      for(vertex w = 0; w < G->V; w++)
         if(G->adj[v][w] || G->adj[w][v])
             return 0;
@@ -166,7 +225,7 @@ int isIsolated(Graph G, vertex v) {
     return 1;
 }
 
-int thereIsArkBetween( Graph G, vertex v, vertex w ) {
+int GRAPHthereIsArkBetween( Graph G, vertex v, vertex w ) {
     return G->adj[v][w];
 }
 
@@ -179,7 +238,7 @@ int GRAPHIsUndirected(Graph G) {
                 if(G->adj[v][w] && G->adj[w][v] == 0)
                     return 0;
                 else
-                    arcs+=2;
+                    arcs += 2;
 
     return 1;
 }

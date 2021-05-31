@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <time.h>
 #include "GRAPHlists.h"
 
@@ -97,6 +98,68 @@ Graph GRAPHrand( int V, int A ) {
     
     return G;
 }
+
+
+bool isTopoNumbering( Graph G, int topo[]) {
+   for (vertex v = 0; v < G->V; ++v)
+      for (link a = G->adj[v]; a != NULL; a = a->next) 
+         if (topo[v] >= topo[a->w]) 
+            return false;
+
+   return true;
+}
+
+
+// static int visited[1000];
+
+static void reachR( Graph G, vertex v)
+{
+    visited[v] = 1;
+
+    for (link a = G->adj[v]; a != NULL; a = a->next)
+        if (visited[a->w] == 0)
+            reachR(G, a->w);
+}
+
+bool GRAPHreach( Graph G, vertex s, vertex t)
+{
+    for (vertex v = 0; v < G->V; ++v)
+        visited[v] = 0;
+
+    reachR(G, s);
+
+    if (visited[t] == 0)
+        return false;
+    else
+        return true;
+}
+
+
+static int cnt, pre[1000];
+
+static void dfsR(Graph G, vertex v)
+{
+    pre[v] = cnt++;
+    
+    for (link a = G->adj[v]; a != NULL; a = a->next) {
+        vertex w = a->w;
+        if (pre[w] == -1)
+            dfsR( G, w);
+    }
+}
+
+void GRAPHdfs(Graph)
+{
+    cnt = 0;
+
+    for (vertex v = 0; v < G->V; ++v) 
+        pre[v] = -1;
+
+    for (vertex v = 0; v < G->V; ++v)
+        if (pre[v] == -1) 
+            dfsR( G, v);
+}
+
 
 static int isSink( int V, link *l, vertex v ) {
     // Testa se o vértice especificado possui algum arco de saída
