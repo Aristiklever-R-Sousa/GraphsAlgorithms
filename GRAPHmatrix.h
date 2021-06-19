@@ -11,14 +11,14 @@ void GRAPHremoveArc( Graph G, vertex v, vertex w );
 void GRAPHshow( Graph G );
 Graph GRAPHrand( int V, int A );
 
-bool isTopoNumbering( Graph, int []);
+int isTopoNumbering( Graph, int []);
 
 /*
     * A função GRAPHreach() recebe vértices s e t de um grafo G e decide se t está ao alcance de s ou não.
     * A função estática reachR() é recursiva e servirá para determinar se s realmente alcança t em algum momento.
 */
-static void reachR( Graph G, vertex v)
-bool GRAPHreach( Graph G, vertex s, vertex t);
+static void reachR( Graph, vertex);
+int GRAPHreach( Graph, vertex, vertex);
 
 /*
 	* A função GRAPHdfs() faz uma busca em profundidade no grafo G. Ela atribui um número de ordem pre[x]
@@ -28,6 +28,27 @@ bool GRAPHreach( Graph G, vertex s, vertex t);
 static void dfsR(Graph, vertex);
 void GRAPHdfs(Graph);
 
+/*
+	* A função GRAPHdfs2() faz uma busca em profundidade no grafo G. Ela atribui um número de ordem pre[x]
+	* a cada vértice x (o k-ésimo vértice descoberto recebe o número de ordem k)
+	* e registra a correspondente floresta DFS no vetor de pais pa[].
+	* (Código inspirado no programa 18.3 de Sedgewick.)
+*/
+static void dfsRForest(Graph, vertex);
+void GRAPHdfsForest(Graph);
+
+static void dfsRForest2(Graph, vertex);
+void GRAPHdfsForest2(Graph);
+
+void GRAPHgetDoublePermutationNotation(Graph G);
+
+void GRAPHgetPreVector(Graph);
+
+void GRAPHgetPostVector(Graph);
+
+void GRAPHgetPaVector(Graph);
+
+void whatIsTheType(Graph);
 
 /*
 	* Exercicise List 1

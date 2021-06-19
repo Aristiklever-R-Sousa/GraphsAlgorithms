@@ -84,14 +84,14 @@ Graph GRAPHrand( int V, int A )
     return G;
 }
 
-bool isTopoNumbering( Graph G, int topo[])
+int isTopoNumbering( Graph G, int topo[])
 {
     for (vertex v = 0; v < G->V; ++v)
         for (vertex w = 0; w < G->V; w++)
-            if (adj[v][w] && topo[v] >= topo[w])
-                return false;
+            if (G->adj[v][w] && topo[v] >= topo[w])
+                return 0;
 
-   return true;
+   return 1;
 }
 
 static int visited[1000];
@@ -105,7 +105,7 @@ static void reachR( Graph G, vertex v)
             reachR(G, w);
 }
 
-bool GRAPHreach( Graph G, vertex s, vertex t)
+int GRAPHreach( Graph G, vertex s, vertex t)
 { 
     for (vertex v = 0; v < G->V; ++v)
         visited[v] = 0;
@@ -113,24 +113,42 @@ bool GRAPHreach( Graph G, vertex s, vertex t)
     reachR(G, s);
 
     if (visited[t] == 0)
-        return false;
-    else
-        return true;
+        return 0;
+    
+    return 1;
 }
 
-static int cnt, pre[1000];
+static int cnt, indent, pre[1000], post[1000], pa[1000];
 
-static void dfsR(Graph)
+static void dfsR(Graph G, vertex v)
 {
     pre[v] = cnt++; 
-    
+
     for (vertex w = 0; w < G->V; w++) {
-        if (pre[w] == -1)
-            dfsR(G, w);
+        if (G->adj[v][w]) {
+            for(int i = 0; i < indent; i++)
+                printf(". ");
+            printf("%d-%d", v, w);
+            
+            if(pre[w] == -1) {
+                printf(" dfsR(G,%d)\n", w);
+                indent++;
+                dfsR(G, w);
+            }
+            else
+                printf("\n");
+            
+        }
     }
+
+    for(int i = 0; i < indent; i++)
+        printf(". ");
+    printf("%d\n", v);
+
+    indent--;
 }
 
-void GRAPHdfs(Graph)
+void GRAPHdfs(Graph G)
 {
     cnt = 0;
 
@@ -138,8 +156,139 @@ void GRAPHdfs(Graph)
         pre[v] = -1;
 
     for (vertex v = 0; v < G->V; ++v)
-        if (pre[v] == -1) 
+        if (pre[v] == -1) {
+            indent = 0;
+            printf("%d dfsR(G,%d)\n", v, v);
             dfsR( G, v);
+            printf("\n");   
+        }
+
+}
+
+static void dfsRForest(Graph G, vertex v)
+{
+    pre[v] = cnt++; 
+
+    for (vertex w = 0; w < G->V; w++) {
+        if (G->adj[v][w]) {
+            for(int i = 0; i < indent; i++)
+                printf(". ");
+            printf("%d-%d", v, w);
+            
+            if(pre[w] == -1) {
+                pa[w] = v;
+                printf(" dfsRForest(G,%d)\n", w);
+                indent++;
+                dfsRForest(G, w);
+            }
+            else
+                printf("\n");
+            
+        }
+    }
+
+    for(int i = 0; i < indent; i++)
+        printf(". ");
+    printf("%d\n", v);
+
+    indent--;
+
+    post[v] = cnt++;
+}
+
+void GRAPHdfsForest(Graph G)
+{
+    cnt = 0;
+
+    for (vertex v = 0; v < G->V; ++v) 
+        pre[v] = pa[v] = -1;
+
+    for (vertex v = 0; v < G->V; ++v)
+        if (pre[v] == -1) {
+            indent = 0;
+            printf("%d dfsRForest(G,%d)\n", v, v);
+            pa[v] = v;
+            dfsRForest( G, v);
+            printf("\n"); 
+        }
+
+    printf("\n\n"); 
+}
+
+char paren[1000];
+
+static void dfsRForest2(Graph G, vertex v)
+{
+    paren[cnt] = '(';
+    pre[v] = cnt++; 
+
+    printf("%d ", v);
+
+    for (vertex w = 0; w < G->V; w++) {
+        if (G->adj[v][w]) {
+            if(pre[w] == -1) {
+                pa[w] = v;
+                dfsRForest2(G, w);
+            }
+        }
+    }
+
+    printf("%d ", v);
+
+    paren[cnt] = ')';
+    post[v] = cnt++;
+}
+
+void GRAPHdfsForest2(Graph G)
+{
+    cnt = 0;
+
+    for (vertex v = 0; v < G->V; ++v) 
+        pre[v] = pa[v] = -1;
+
+    for (vertex v = 0; v < G->V; ++v)
+        if (pre[v] == -1) {
+            pa[v] = v;
+            dfsRForest2(G, v);
+        }
+
+    printf("\n");
+
+    for(int i = 0; i < cnt; i++)
+        printf("%c ", paren[i]);
+
+    printf("\n\n"); 
+}
+
+void whatIsTheType(Graph G) {
+    cnt = 0;
+
+    for (vertex v = 0; v < G->V; ++v) 
+        pre[v] = post[v] = pa[v] = -1;
+
+    for (vertex v = 0; v < G->V; ++v)
+        if (pre[v] == -1) {
+            pa[v] = v;
+            dfsRForest( G, v);
+        }
+
+    printf("\n");
+
+    for (vertex v = 0; v < G->V; ++v)
+        for (vertex w = 0; w < G->V; ++w)
+            if(G->adj[v][w]) {
+                if(pa[w] == v)
+                    printf("%d-%d floresta\n", v, w);
+
+                else if(pre[v] < pre[w] && post[v] > post[w])
+                    printf("%d-%d avanço\n", v, w);
+
+                else if(pre[v] > pre[w] && post[v] < post[w])
+                    printf("%d-%d retorno\n", v, w);
+
+                else
+                    printf("%d-%d cruzado\n", v, w);
+            }
 }
 
 static int isSink(int V, vertex **m, vertex v) {
@@ -328,8 +477,6 @@ static void pathConstruct( Graph G, vertex v ) {
             archVisited[v][w] = 1;
             pathConstruct( G, w );
 
-            if(step == 0)
-                
         }
     }
 
@@ -349,6 +496,6 @@ void GRAPHsimplePaths(Graph G, int lenghtPath) {
         step = -1;
         pathConstruct(G, v);
         emptyVertVisited(G->V);
-        emptyArcVisited(G->V);
+        emptyArcVisited(G->V, -1);
     }
 }

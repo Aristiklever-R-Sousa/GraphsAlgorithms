@@ -1,0 +1,10 @@
+*.zip
+*.rar
+*.pdf
+*.exe
+*.out
+*.txt
+
+Resolutions-EF1/
+Resolutions-AP1/
+.vscode/

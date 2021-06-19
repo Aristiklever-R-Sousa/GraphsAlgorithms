@@ -5,7 +5,7 @@
 // #include "GRAPHlists.h"
 
 int main() {
-    int V, v = 1, w = 1;
+    int V, v, w;
 
     scanf("%d", &V);
     Graph g = GRAPHinit(V);
@@ -16,8 +16,11 @@ int main() {
             GRAPHinsertArc(g, v, w);
     }
 
-    GRAPHshow(g);
-    GRAPHsimplePaths(g, 4);
+    GRAPHdfsForest2(g);
+
+    // whatIsTheType(g);
+
+    // GRAPHshow(g);
 
     // printf("%ld\n", RAND_MAX+1);
 }
