@@ -1,4 +1,4 @@
-<h2 align="center">Algoritmos para Grafos</h2>
+<h2 align="center">Algoritmos para Grafos em C</h2>
 
 ## O que são Grafos?
 
