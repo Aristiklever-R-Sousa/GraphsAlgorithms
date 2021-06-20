@@ -46,3 +46,8 @@ int *UGRAPHdegrees( Graph G );
 int isRootedForest( Graph G, int top[] );
 
 void GRAPHsimplePaths( Graph G, int lenghtPath );
+
+/*
+	* Exercicise List 2
+*/
+void GRAPHbfs( Graph G, vertex s);

@@ -401,3 +401,28 @@ void GRAPHsimplePaths(Graph G, int lenghtPath) {
         emptyVisited(G->V);
     }
 }
+
+
+/*
+	* Exercicise List 2
+*/
+
+void GRAPHbfs( Graph G, vertex s) 
+{ 
+   int cnt = 0;
+   for (vertex v = 0; v < G->V; ++v)
+      num[v] = -1;
+   QUEUEinit( G->V);
+   num[s] = cnt++; 
+   QUEUEput( s); 
+
+   while (!QUEUEempty( )) {
+      vertex v = QUEUEget( ); 
+      for (link a = G->adj[v]; a != NULL; a = a->next)
+         if (num[a->w] == -1) {
+            num[a->w] = cnt++; 
+            QUEUEput( a->w); 
+         }
+   }
+   QUEUEfree( ); 
+}
